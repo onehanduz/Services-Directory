@@ -19,8 +19,9 @@ model User {
   phone      String?
   reviews    Review[]
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  Service    Service[]
 
   @@map("users")
 }
@@ -42,12 +43,12 @@ model Service {
   description String?
   category_id Int
   category    Category @relation(fields: [category_id], references: [id])
-  image       String?
   location    String?
   reviews     Review[]
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  user_id     Int
+  user        User     @relation(fields: [user_id], references: [id])
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
 
   @@map("services")
 }
