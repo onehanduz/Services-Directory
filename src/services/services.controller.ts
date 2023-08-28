@@ -4,16 +4,17 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Patch,
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { JwtGuard } from 'src/auth/guards';
 import { ServicesService } from './services.service';
 import { CreateServicesDto, EditServicesDto } from './dto';
 import { GetUser } from 'src/auth/decorator';
+import { JwtGuard } from 'src/auth/guards';
 
-UseGuards(JwtGuard);
+@UseGuards(JwtGuard)
 @Controller('services')
 export class ServicesController {
   constructor(private servicesService: ServicesService) {}
@@ -23,12 +24,12 @@ export class ServicesController {
   }
 
   @Get(':id')
-  getById(@Param('id') id: number) {
+  getById(@Param('id', ParseIntPipe) id: number) {
     return this.servicesService.getById(id);
   }
 
   @Post()
-  create(@Body() dto: CreateServicesDto, @GetUser('id') user_id: number) {
+  create(@GetUser('id') user_id: number, @Body() dto: CreateServicesDto) {
     return this.servicesService.create(user_id, dto);
   }
 
@@ -36,13 +37,16 @@ export class ServicesController {
   edit(
     @Body() dto: EditServicesDto,
     @GetUser('id') user_id: number,
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
   ) {
     return this.servicesService.edit(id, user_id, dto);
   }
 
   @Delete(':id')
-  delete(@GetUser('id') user_id: number, @Param('id') id: number) {
+  delete(
+    @GetUser('id') user_id: number,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
     return this.servicesService.delete(id, user_id);
   }
 }

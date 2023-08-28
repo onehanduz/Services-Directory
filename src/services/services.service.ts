@@ -1,6 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateServicesDto, EditServicesDto } from './dto';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class ServicesService {
@@ -12,7 +13,7 @@ export class ServicesService {
   }
 
   async getById(id: number) {
-    const service = await this.prisma.service.findUnique({
+    const service = await this.prisma.service.findFirst({
       where: {
         id,
       },
